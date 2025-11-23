@@ -49,7 +49,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTa
       <aside 
         className={`
           print:hidden
-          fixed inset-y-0 left-0 z-50 w-72 
+          fixed inset-y-0 left-0 z-[60] w-72 
           bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl
           border-r border-gray-200/50 dark:border-gray-800/50 
           transform transition-all duration-300 ease-in-out 

@@ -9,12 +9,13 @@ export const AIAnalysis: React.FC = () => {
   const [response, setResponse] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  // Access environment variable using process.env.API_KEY as per guidelines
   const apiKey = process.env.API_KEY || ''; 
 
   const handleAskGemini = async () => {
     if (!prompt.trim()) return;
     if (!apiKey) {
-      setResponse("API Key is missing. Please configure process.env.API_KEY.");
+      setResponse("API Key is missing. Please configure API_KEY in your settings.");
       return;
     }
 

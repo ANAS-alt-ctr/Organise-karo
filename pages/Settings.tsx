@@ -40,18 +40,21 @@ export const Settings: React.FC = () => {
   };
 
   const handleReset = () => {
-    if (window.confirm("Are you sure you want to reset all data? This cannot be undone and will revert the app to its initial state.")) {
-        // Hard Reset: Explicitly clear storage and force reload to ensure a completely clean slate
-        // This avoids race conditions between React state updates and localStorage
+    if (window.confirm("CRITICAL WARNING: Are you sure you want to delete ALL data? This cannot be undone.")) {
+        // 1. Reset Global State immediately (Updates UI and triggers useEffect to overwrite Storage)
+        dispatch({ type: 'RESET_DATA' });
+        
+        // 2. Explicitly clear storage as a backup measure
         try {
             localStorage.removeItem(STORAGE_KEY);
-            window.location.reload();
         } catch (e) {
-            console.error("Failed to clear local storage", e);
-            // Fallback to dispatch if reload fails (rare)
-            dispatch({ type: 'RESET_DATA' });
-            alert("Application data has been reset.");
+            console.error("Storage clear error", e);
         }
+
+        // 3. Reload to clear local component states (carts, forms, etc.)
+        setTimeout(() => {
+            window.location.reload();
+        }, 100);
     }
   };
 
