@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAppStore } from '../context/AppContext';
 import { CartItem } from '../types';
-import { Plus, Trash, Printer, Save, Calculator, FileCheck, ArrowLeft, ShoppingCart, Calendar } from 'lucide-react';
+import { Plus, Trash, Printer, Save, Calculator, ArrowLeft, ShoppingCart, Calendar } from 'lucide-react';
 import { CurrencySymbols } from '../types';
 
 export const Billing: React.FC = () => {
@@ -123,7 +123,7 @@ export const Billing: React.FC = () => {
     if (!invoice) return <div>Invoice not found</div>;
 
     return (
-      <div className="max-w-4xl mx-auto my-4 relative animate-in fade-in slide-in-from-bottom-8 duration-500">
+      <div className="max-w-4xl mx-auto my-4 relative animate-in fade-in slide-in-from-bottom-8 duration-500 print:max-w-none print:w-full print:m-0">
         <div className="flex justify-between items-center mb-8 print:hidden">
           <div className="flex items-center space-x-4">
              <button onClick={handleNewInvoice} className="flex items-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium transition-colors">
@@ -136,27 +136,27 @@ export const Billing: React.FC = () => {
         </div>
 
         {/* Premium SaaS Style Invoice Preview */}
-        <div className="bg-white text-gray-900 shadow-2xl rounded-none print:shadow-none print:w-full print:absolute print:top-0 print:left-0 print:text-black">
+        <div className="bg-white text-gray-900 shadow-2xl rounded-none print:shadow-none print:w-full print:text-black print:bg-white">
           {/* Top Border Accent */}
-          <div className="h-2 w-full bg-gradient-to-r from-rose-600 to-orange-600"></div>
+          <div className="h-2 w-full bg-gradient-to-r from-rose-600 to-orange-600 print:bg-rose-600"></div>
           
-          <div className="p-16">
+          <div className="p-16 print:p-8">
             {/* Header */}
             <div className="flex justify-between items-start mb-16">
               <div>
-                <h1 className="text-3xl font-extrabold text-rose-600 tracking-tight mb-2">{state.settings.businessName}</h1>
-                <div className="text-gray-500 text-sm leading-relaxed max-w-xs">
+                <h1 className="text-3xl font-extrabold text-rose-600 tracking-tight mb-2 print:text-rose-700">{state.settings.businessName}</h1>
+                <div className="text-gray-500 text-sm leading-relaxed max-w-xs print:text-gray-700">
                     {state.settings.businessAddress}
                 </div>
               </div>
               <div className="text-right">
-                <h2 className="text-5xl font-black text-gray-100 tracking-tighter mb-4">INVOICE</h2>
+                <h2 className="text-5xl font-black text-gray-100 tracking-tighter mb-4 print:text-gray-200">INVOICE</h2>
                 <div className="flex flex-col space-y-1">
-                    <div className="text-sm font-semibold text-gray-400 uppercase tracking-widest">Invoice Number</div>
+                    <div className="text-sm font-semibold text-gray-400 uppercase tracking-widest print:text-gray-600">Invoice Number</div>
                     <div className="text-xl font-bold text-gray-900">#{invoice.id.split('-')[1]}</div>
                 </div>
                 <div className="flex flex-col space-y-1 mt-4">
-                    <div className="text-sm font-semibold text-gray-400 uppercase tracking-widest">Date Issued</div>
+                    <div className="text-sm font-semibold text-gray-400 uppercase tracking-widest print:text-gray-600">Date Issued</div>
                     <div className="text-xl font-bold text-gray-900">{new Date(invoice.date).toLocaleDateString()}</div>
                 </div>
               </div>
@@ -165,15 +165,12 @@ export const Billing: React.FC = () => {
             {/* Bill To Grid */}
             <div className="grid grid-cols-2 gap-12 mb-16">
               <div>
-                 <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 border-b border-gray-100 pb-2">Bill To</h3>
+                 <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 border-b border-gray-100 print:border-gray-300 pb-2 print:text-gray-600">Bill To</h3>
                  <p className="text-xl font-bold text-gray-900 mb-1">{invoice.partyName}</p>
-                 <div className="text-gray-600 text-sm space-y-1">
+                 <div className="text-gray-600 text-sm space-y-1 print:text-gray-800">
                     <p>{state.parties.find(p => p.id === invoice.partyId)?.phone}</p>
                     <p>{state.parties.find(p => p.id === invoice.partyId)?.address}</p>
                  </div>
-              </div>
-              <div className="flex flex-col justify-end items-end">
-                {/* Could add Ship To here later */}
               </div>
             </div>
 
@@ -181,16 +178,16 @@ export const Billing: React.FC = () => {
             <div className="mb-12">
                 <table className="w-full">
                     <thead>
-                        <tr className="bg-gray-900 text-white">
-                            <th className="py-4 px-6 text-left text-xs font-bold uppercase tracking-wider rounded-l-lg">Item Description</th>
+                        <tr className="bg-gray-900 text-white print:bg-gray-200 print:text-black">
+                            <th className="py-4 px-6 text-left text-xs font-bold uppercase tracking-wider rounded-l-lg print:rounded-none">Item Description</th>
                             <th className="py-4 px-6 text-right text-xs font-bold uppercase tracking-wider">Qty</th>
                             <th className="py-4 px-6 text-right text-xs font-bold uppercase tracking-wider">Price</th>
                             <th className="py-4 px-6 text-right text-xs font-bold uppercase tracking-wider">Disc.</th>
                             <th className="py-4 px-6 text-right text-xs font-bold uppercase tracking-wider">Tax</th>
-                            <th className="py-4 px-6 text-right text-xs font-bold uppercase tracking-wider rounded-r-lg">Amount</th>
+                            <th className="py-4 px-6 text-right text-xs font-bold uppercase tracking-wider rounded-r-lg print:rounded-none">Amount</th>
                         </tr>
                     </thead>
-                    <tbody className="text-gray-700 text-sm">
+                    <tbody className="text-gray-700 text-sm print:text-black">
                         {invoice.items.map((item, idx) => {
                              const baseTotal = item.sellPrice * item.quantity;
                              const disc = (baseTotal * item.discountPercent) / 100;
@@ -198,13 +195,13 @@ export const Billing: React.FC = () => {
                              const tax = (taxable * item.taxPercent) / 100;
                              const final = taxable + tax;
                             return (
-                                <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                    <td className="py-5 px-6 font-medium border-b border-gray-100">{item.name}</td>
-                                    <td className="py-5 px-6 text-right border-b border-gray-100">{item.quantity}</td>
-                                    <td className="py-5 px-6 text-right border-b border-gray-100">{symbol} {item.sellPrice.toLocaleString()}</td>
-                                    <td className="py-5 px-6 text-right border-b border-gray-100 text-rose-600">{item.discountPercent > 0 ? `-${item.discountPercent}%` : '-'}</td>
-                                    <td className="py-5 px-6 text-right border-b border-gray-100">{symbol} {tax.toFixed(2)}</td>
-                                    <td className="py-5 px-6 text-right font-bold border-b border-gray-100">{symbol} {final.toFixed(2)}</td>
+                                <tr key={idx} className={`${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50 print:bg-gray-100'} border-b border-gray-100 print:border-gray-300`}>
+                                    <td className="py-5 px-6 font-medium">{item.name}</td>
+                                    <td className="py-5 px-6 text-right">{item.quantity}</td>
+                                    <td className="py-5 px-6 text-right">{symbol} {item.sellPrice.toLocaleString()}</td>
+                                    <td className="py-5 px-6 text-right text-rose-600 print:text-black">{item.discountPercent > 0 ? `-${item.discountPercent}%` : '-'}</td>
+                                    <td className="py-5 px-6 text-right">{symbol} {tax.toFixed(2)}</td>
+                                    <td className="py-5 px-6 text-right font-bold">{symbol} {final.toFixed(2)}</td>
                                 </tr>
                             );
                         })}
@@ -213,44 +210,44 @@ export const Billing: React.FC = () => {
             </div>
 
             {/* Totals */}
-            <div className="flex justify-end mb-16">
+            <div className="flex justify-end mb-16 break-inside-avoid">
                <div className="w-80">
-                  <div className="flex justify-between py-3 border-b border-gray-100">
-                     <span className="font-medium text-gray-600">Subtotal</span>
+                  <div className="flex justify-between py-3 border-b border-gray-100 print:border-gray-300">
+                     <span className="font-medium text-gray-600 print:text-gray-700">Subtotal</span>
                      <span className="font-bold text-gray-900">{symbol} {invoice.subTotal.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between py-3 border-b border-gray-100">
-                     <span className="font-medium text-gray-600">Discount</span>
-                     <span className="font-bold text-rose-600">({symbol} {invoice.totalDiscount.toFixed(2)})</span>
+                  <div className="flex justify-between py-3 border-b border-gray-100 print:border-gray-300">
+                     <span className="font-medium text-gray-600 print:text-gray-700">Discount</span>
+                     <span className="font-bold text-rose-600 print:text-black">({symbol} {invoice.totalDiscount.toFixed(2)})</span>
                   </div>
-                  <div className="flex justify-between py-3 border-b border-gray-100">
-                     <span className="font-medium text-gray-600">Total Tax ({state.settings.taxName})</span>
+                  <div className="flex justify-between py-3 border-b border-gray-100 print:border-gray-300">
+                     <span className="font-medium text-gray-600 print:text-gray-700">Total Tax ({state.settings.taxName})</span>
                      <span className="font-bold text-gray-900">{symbol} {invoice.totalTax.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between py-4 mt-2">
                      <span className="text-xl font-bold text-gray-900">Grand Total</span>
-                     <span className="text-2xl font-black text-rose-600">{symbol} {invoice.grandTotal.toFixed(2)}</span>
+                     <span className="text-2xl font-black text-rose-600 print:text-black">{symbol} {invoice.grandTotal.toFixed(2)}</span>
                   </div>
                </div>
             </div>
 
             {/* Footer / Terms */}
-            <div className="flex justify-between items-end border-t-2 border-gray-100 pt-8">
+            <div className="flex justify-between items-end border-t-2 border-gray-100 print:border-gray-300 pt-8 break-inside-avoid">
                <div className="max-w-md">
                   <h4 className="font-bold text-gray-900 mb-2 text-sm uppercase">Terms & Conditions</h4>
-                  <p className="text-gray-500 text-xs leading-relaxed">
+                  <p className="text-gray-500 text-xs leading-relaxed print:text-gray-700">
                     Payment is due within 15 days. Please include invoice number on your check. 
                     Thank you for your business.
                   </p>
                </div>
                <div className="text-center">
-                  <div className="h-16 w-48 border-b border-gray-300 mb-2"></div>
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Authorized Signatory</p>
+                  <div className="h-16 w-48 border-b border-gray-300 mb-2 print:border-black"></div>
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-widest print:text-gray-600">Authorized Signatory</p>
                </div>
             </div>
           </div>
           {/* Bottom Accent */}
-           <div className="h-4 w-full bg-gray-900"></div>
+           <div className="h-4 w-full bg-gray-900 print:bg-black"></div>
         </div>
       </div>
     );
@@ -359,6 +356,7 @@ export const Billing: React.FC = () => {
                             value={Number.isNaN(item.sellPrice) ? '' : item.sellPrice}
                             onChange={(e) => updateCartItem(item.id, 'sellPrice', e.target.valueAsNumber)}
                             onWheel={(e) => e.currentTarget.blur()}
+                            step="0.01"
                             className="w-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-lg p-2 text-right text-gray-900 dark:text-white focus:ring-2 focus:ring-rose-500 outline-none font-medium"
                           />
                        </td>
@@ -368,6 +366,7 @@ export const Billing: React.FC = () => {
                             value={Number.isNaN(item.discountPercent) ? '' : item.discountPercent}
                             onChange={(e) => updateCartItem(item.id, 'discountPercent', e.target.valueAsNumber)}
                             onWheel={(e) => e.currentTarget.blur()}
+                            step="0.01"
                             className="w-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-lg p-2 text-center text-gray-900 dark:text-white focus:ring-2 focus:ring-rose-500 outline-none font-medium"
                           />
                        </td>

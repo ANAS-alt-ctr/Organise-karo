@@ -206,6 +206,7 @@ export const Parties: React.FC = () => {
                 <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Opening Balance</label>
                 <input 
                   type="number" 
+                  step="0.01"
                   value={formData.balance !== undefined && !Number.isNaN(formData.balance) ? formData.balance : ''}
                   onChange={e => setFormData({...formData, balance: e.target.valueAsNumber})}
                   className="block w-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-xl p-3.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-rose-500 outline-none transition-all font-medium"

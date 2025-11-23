@@ -216,6 +216,7 @@ export const Inventory: React.FC = () => {
                    <input 
                     type="number" 
                     required
+                    step="0.01"
                     value={formData.buyPrice !== undefined && !Number.isNaN(formData.buyPrice) ? formData.buyPrice : ''}
                     onChange={e => setFormData({...formData, buyPrice: e.target.valueAsNumber})}
                     onWheel={(e) => e.currentTarget.blur()}
@@ -227,6 +228,7 @@ export const Inventory: React.FC = () => {
                    <input 
                     type="number" 
                     required
+                    step="0.01"
                     value={formData.sellPrice !== undefined && !Number.isNaN(formData.sellPrice) ? formData.sellPrice : ''}
                     onChange={e => setFormData({...formData, sellPrice: e.target.valueAsNumber})}
                     onWheel={(e) => e.currentTarget.blur()}
@@ -238,6 +240,7 @@ export const Inventory: React.FC = () => {
                 <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Tax ({state.settings.taxName} %)</label>
                 <input 
                   type="number" 
+                  step="0.01"
                   value={formData.taxPercent !== undefined && !Number.isNaN(formData.taxPercent) ? formData.taxPercent : ''}
                   onChange={e => setFormData({...formData, taxPercent: e.target.valueAsNumber})}
                   onWheel={(e) => e.currentTarget.blur()}
