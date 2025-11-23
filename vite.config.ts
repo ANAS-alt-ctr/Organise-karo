@@ -1,12 +1,21 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react()],
-  define: {
-    // Polyfill process.env for backward compatibility if needed, 
-    // though import.meta.env is preferred in Vite
-    'process.env': {} 
-  }
+export default defineConfig(({ mode }) => {
+  // Load env file based on `mode` in the current working directory.
+  // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
+  const env = loadEnv(mode, (process as any).cwd(), '');
+
+  return {
+    plugins: [react()],
+    define: {
+      // Define global constants replacement.
+      // This allows the code to use process.env.API_KEY as mandated,
+      // while pulling the value from VITE_API_KEY or API_KEY in the Netlify environment.
+      'process.env.API_KEY': JSON.stringify(env.VITE_API_KEY || env.API_KEY || ''),
+      // Polyfill simple process.env checks if any other libraries rely on it
+      'process.env': {},
+    }
+  };
 });
