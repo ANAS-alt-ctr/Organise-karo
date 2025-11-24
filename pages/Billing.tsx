@@ -123,7 +123,7 @@ export const Billing: React.FC = () => {
     if (!invoice) return <div>Invoice not found</div>;
 
     return (
-      <div className="max-w-4xl mx-auto my-4 relative animate-in fade-in slide-in-from-bottom-8 duration-500 print:max-w-none print:w-full print:m-0 print:absolute print:top-0 print:left-0">
+      <div className="max-w-4xl mx-auto my-6 relative animate-in fade-in slide-in-from-bottom-8 duration-500 print:max-w-none print:w-full print:m-0 print:absolute print:top-0 print:left-0">
         <div className="flex justify-between items-center mb-8 print:hidden">
           <div className="flex items-center space-x-4">
              <button onClick={handleNewInvoice} className="flex items-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium transition-colors">
@@ -135,120 +135,118 @@ export const Billing: React.FC = () => {
           </button>
         </div>
 
-        {/* Premium SaaS Style Invoice Preview */}
-        <div className="bg-white text-gray-900 shadow-2xl rounded-none print:shadow-none print:w-full print:text-black print:bg-white border border-transparent print:border-none">
-          {/* Top Border Accent */}
-          <div className="h-2 w-full bg-gradient-to-r from-rose-600 to-orange-600 print:bg-rose-600 print:print-color-adjust-exact"></div>
+        {/* Premium Clean Invoice Design */}
+        <div className="bg-white text-gray-900 shadow-2xl rounded-2xl overflow-hidden print:shadow-none print:w-full print:rounded-none print:text-black">
           
-          <div className="p-16 print:p-8">
-            {/* Header */}
-            <div className="flex justify-between items-start mb-16">
+          {/* Header */}
+          <div className="px-12 py-10 border-b border-gray-100 bg-gray-50/30 print:bg-white print:px-8 print:py-6">
+            <div className="flex justify-between items-start">
               <div>
-                <h1 className="text-3xl font-extrabold text-rose-600 tracking-tight mb-2 print:text-rose-700">{state.settings.businessName}</h1>
-                <div className="text-gray-500 text-sm leading-relaxed max-w-xs print:text-gray-800">
+                 <h1 className="text-2xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-rose-600 to-orange-600 print:text-black mb-2">
+                    {state.settings.businessName}
+                 </h1>
+                 <p className="text-gray-500 text-sm whitespace-pre-line leading-relaxed max-w-xs print:text-gray-700 font-medium">
                     {state.settings.businessAddress}
-                </div>
+                 </p>
               </div>
               <div className="text-right">
-                {/* Fixed visibility: Changed text-gray-100 (white) to text-gray-200 (light gray) for screen, and black for print */}
-                <h2 className="text-5xl font-black text-gray-200 tracking-tighter mb-4 print:text-black">INVOICE</h2>
-                <div className="flex flex-col space-y-1">
-                    <div className="text-sm font-semibold text-gray-400 uppercase tracking-widest print:text-gray-600">Invoice Number</div>
-                    <div className="text-xl font-bold text-gray-900">#{invoice.id.split('-')[1]}</div>
-                </div>
-                <div className="flex flex-col space-y-1 mt-4">
-                    <div className="text-sm font-semibold text-gray-400 uppercase tracking-widest print:text-gray-600">Date Issued</div>
-                    <div className="text-xl font-bold text-gray-900">{new Date(invoice.date).toLocaleDateString()}</div>
+                <h2 className="text-4xl font-black text-gray-900 tracking-tighter mb-1 print:text-black">INVOICE</h2>
+                <p className="text-rose-600 font-semibold text-lg mb-4 print:text-black">#{invoice.id.split('-')[1]}</p>
+                
+                <div className="text-sm space-y-1 text-gray-500 print:text-black">
+                   <p>Date Issued: <span className="font-bold text-gray-900 print:text-black">{new Date(invoice.date).toLocaleDateString()}</span></p>
                 </div>
               </div>
-            </div>
-
-            {/* Bill To Grid */}
-            <div className="grid grid-cols-2 gap-12 mb-16 print:gap-4">
-              <div>
-                 <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 border-b border-gray-100 print:border-gray-400 pb-2 print:text-black">Bill To</h3>
-                 <p className="text-xl font-bold text-gray-900 mb-1">{invoice.partyName}</p>
-                 <div className="text-gray-600 text-sm space-y-1 print:text-gray-900">
-                    <p>{state.parties.find(p => p.id === invoice.partyId)?.phone}</p>
-                    <p>{state.parties.find(p => p.id === invoice.partyId)?.address}</p>
-                 </div>
-              </div>
-            </div>
-
-            {/* Items Table */}
-            <div className="mb-12">
-                <table className="w-full">
-                    <thead>
-                        <tr className="bg-gray-900 text-white print:bg-gray-100 print:text-black print:border-b-2 print:border-gray-400">
-                            <th className="py-4 px-6 text-left text-xs font-bold uppercase tracking-wider rounded-l-lg print:rounded-none">Item Description</th>
-                            <th className="py-4 px-6 text-right text-xs font-bold uppercase tracking-wider">Qty</th>
-                            <th className="py-4 px-6 text-right text-xs font-bold uppercase tracking-wider">Price</th>
-                            <th className="py-4 px-6 text-right text-xs font-bold uppercase tracking-wider">Disc.</th>
-                            <th className="py-4 px-6 text-right text-xs font-bold uppercase tracking-wider">Tax</th>
-                            <th className="py-4 px-6 text-right text-xs font-bold uppercase tracking-wider rounded-r-lg print:rounded-none">Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody className="text-gray-700 text-sm print:text-black">
-                        {invoice.items.map((item, idx) => {
-                             const baseTotal = item.sellPrice * item.quantity;
-                             const disc = (baseTotal * item.discountPercent) / 100;
-                             const taxable = baseTotal - disc;
-                             const tax = (taxable * item.taxPercent) / 100;
-                             const final = taxable + tax;
-                            return (
-                                <tr key={idx} className={`${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50 print:bg-white'} border-b border-gray-100 print:border-gray-300`}>
-                                    <td className="py-5 px-6 font-medium">{item.name}</td>
-                                    <td className="py-5 px-6 text-right">{item.quantity}</td>
-                                    <td className="py-5 px-6 text-right">{symbol} {item.sellPrice.toLocaleString()}</td>
-                                    <td className="py-5 px-6 text-right text-rose-600 print:text-black">{item.discountPercent > 0 ? `-${item.discountPercent}%` : '-'}</td>
-                                    <td className="py-5 px-6 text-right">{symbol} {tax.toFixed(2)}</td>
-                                    <td className="py-5 px-6 text-right font-bold">{symbol} {final.toFixed(2)}</td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
-            </div>
-
-            {/* Totals */}
-            <div className="flex justify-end mb-16 break-inside-avoid">
-               <div className="w-80">
-                  <div className="flex justify-between py-3 border-b border-gray-100 print:border-gray-300">
-                     <span className="font-medium text-gray-600 print:text-black">Subtotal</span>
-                     <span className="font-bold text-gray-900">{symbol} {invoice.subTotal.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between py-3 border-b border-gray-100 print:border-gray-300">
-                     <span className="font-medium text-gray-600 print:text-black">Discount</span>
-                     <span className="font-bold text-rose-600 print:text-black">({symbol} {invoice.totalDiscount.toFixed(2)})</span>
-                  </div>
-                  <div className="flex justify-between py-3 border-b border-gray-100 print:border-gray-300">
-                     <span className="font-medium text-gray-600 print:text-black">Total Tax ({state.settings.taxName})</span>
-                     <span className="font-bold text-gray-900">{symbol} {invoice.totalTax.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between py-4 mt-2">
-                     <span className="text-xl font-bold text-gray-900">Grand Total</span>
-                     <span className="text-2xl font-black text-rose-600 print:text-black">{symbol} {invoice.grandTotal.toFixed(2)}</span>
-                  </div>
-               </div>
-            </div>
-
-            {/* Footer / Terms */}
-            <div className="flex justify-between items-end border-t-2 border-gray-100 print:border-gray-400 pt-8 break-inside-avoid">
-               <div className="max-w-md">
-                  <h4 className="font-bold text-gray-900 mb-2 text-sm uppercase">Terms & Conditions</h4>
-                  <p className="text-gray-500 text-xs leading-relaxed print:text-gray-800">
-                    Payment is due within 15 days. Please include invoice number on your check. 
-                    Thank you for your business.
-                  </p>
-               </div>
-               <div className="text-center">
-                  <div className="h-16 w-48 border-b border-gray-300 mb-2 print:border-black"></div>
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-widest print:text-black">Authorized Signatory</p>
-               </div>
             </div>
           </div>
-          {/* Bottom Accent */}
-           <div className="h-4 w-full bg-gray-900 print:bg-black print:print-color-adjust-exact"></div>
+
+          {/* Bill To Section */}
+          <div className="px-12 py-8 print:px-8 print:py-6">
+             <div className="flex justify-between items-start">
+                <div className="w-1/2">
+                   <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 print:text-gray-600">Billed To</p>
+                   <h3 className="text-xl font-bold text-gray-900 mb-2 print:text-black">{invoice.partyName}</h3>
+                   <div className="text-gray-500 text-sm space-y-1 print:text-black">
+                      <p className="font-medium">{state.parties.find(p => p.id === invoice.partyId)?.phone}</p>
+                      <p className="whitespace-pre-line max-w-xs leading-relaxed">{state.parties.find(p => p.id === invoice.partyId)?.address}</p>
+                   </div>
+                </div>
+             </div>
+          </div>
+
+          {/* Table */}
+          <div className="px-12 py-4 print:px-8">
+             <table className="w-full">
+                <thead>
+                   <tr className="border-b-2 border-gray-100 print:border-gray-300">
+                      <th className="py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider print:text-black">Item Description</th>
+                      <th className="py-4 text-right text-xs font-bold text-gray-400 uppercase tracking-wider print:text-black">Qty</th>
+                      <th className="py-4 text-right text-xs font-bold text-gray-400 uppercase tracking-wider print:text-black">Price</th>
+                      <th className="py-4 text-right text-xs font-bold text-gray-400 uppercase tracking-wider print:text-black">Disc.</th>
+                      <th className="py-4 text-right text-xs font-bold text-gray-400 uppercase tracking-wider print:text-black">Total</th>
+                   </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-50 print:divide-gray-200">
+                   {invoice.items.map((item, idx) => {
+                      const baseTotal = item.sellPrice * item.quantity;
+                      const disc = (baseTotal * item.discountPercent) / 100;
+                      const taxable = baseTotal - disc;
+                      const tax = (taxable * item.taxPercent) / 100;
+                      const final = taxable + tax;
+
+                      return (
+                         <tr key={idx}>
+                            <td className="py-4 text-sm font-semibold text-gray-900 print:text-black">{item.name}</td>
+                            <td className="py-4 text-sm text-right text-gray-600 font-medium print:text-black">{item.quantity}</td>
+                            <td className="py-4 text-sm text-right text-gray-600 font-medium print:text-black">{symbol} {item.sellPrice.toLocaleString()}</td>
+                            <td className="py-4 text-sm text-right text-rose-500 font-medium print:text-black">{item.discountPercent > 0 ? `-${item.discountPercent}%` : '-'}</td>
+                            <td className="py-4 text-sm text-right font-bold text-gray-900 print:text-black">{symbol} {final.toFixed(2)}</td>
+                         </tr>
+                      )
+                   })}
+                </tbody>
+             </table>
+          </div>
+
+          {/* Footer Totals */}
+          <div className="px-12 py-8 bg-gray-50/50 border-t border-gray-100 mt-4 print:bg-white print:border-t print:border-gray-200 print:px-8 print:py-6 break-inside-avoid">
+             <div className="flex justify-end">
+                <div className="w-72 space-y-3">
+                   <div className="flex justify-between text-sm text-gray-500 print:text-black">
+                      <span className="font-medium">Subtotal</span>
+                      <span className="font-semibold">{symbol} {invoice.subTotal.toFixed(2)}</span>
+                   </div>
+                   <div className="flex justify-between text-sm text-rose-600 print:text-black">
+                      <span className="font-medium">Discount</span>
+                      <span className="font-semibold">- {symbol} {invoice.totalDiscount.toFixed(2)}</span>
+                   </div>
+                   <div className="flex justify-between text-sm text-gray-500 print:text-black">
+                      <span className="font-medium">Tax ({state.settings.taxName})</span>
+                      <span className="font-semibold">+ {symbol} {invoice.totalTax.toFixed(2)}</span>
+                   </div>
+                   <div className="pt-4 mt-2 border-t border-gray-200 print:border-black flex justify-between items-end">
+                      <span className="text-base font-bold text-gray-900 print:text-black">Grand Total</span>
+                      <span className="text-3xl font-black text-gray-900 print:text-black leading-none">{symbol} {invoice.grandTotal.toFixed(2)}</span>
+                   </div>
+                </div>
+             </div>
+          </div>
+          
+          {/* Bottom Footer */}
+          <div className="px-12 py-10 print:px-8 print:py-8">
+             <div className="flex justify-between items-end">
+                <div className="max-w-md">
+                   <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 print:text-black">Terms & Conditions</p>
+                   <p className="text-xs text-gray-500 leading-relaxed font-medium print:text-black">
+                      Payment is due within 15 days. Please include the invoice number on your check. Thank you for your business.
+                   </p>
+                </div>
+                <div className="text-center pl-8">
+                   <div className="h-px w-48 bg-gray-300 mb-2 print:bg-black"></div>
+                   <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest print:text-black">Authorized Signature</p>
+                </div>
+             </div>
+          </div>
         </div>
       </div>
     );
