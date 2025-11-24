@@ -123,7 +123,7 @@ export const Billing: React.FC = () => {
     if (!invoice) return <div>Invoice not found</div>;
 
     return (
-      <div className="max-w-4xl mx-auto my-6 relative animate-in fade-in slide-in-from-bottom-8 duration-500 print:max-w-none print:w-full print:m-0 print:absolute print:top-0 print:left-0">
+      <div className="max-w-4xl mx-auto my-6 relative animate-in fade-in slide-in-from-bottom-8 duration-500 print:max-w-none print:w-full print:m-0 print:static">
         <div className="flex justify-between items-center mb-8 print:hidden">
           <div className="flex items-center space-x-4">
              <button onClick={handleNewInvoice} className="flex items-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium transition-colors">
@@ -136,10 +136,11 @@ export const Billing: React.FC = () => {
         </div>
 
         {/* Premium Clean Invoice Design */}
-        <div className="bg-white text-gray-900 shadow-2xl rounded-2xl overflow-hidden print:shadow-none print:w-full print:rounded-none print:text-black">
+        {/* Removed overflow-hidden on print to allow content to break across pages */}
+        <div className="bg-white text-gray-900 shadow-2xl rounded-2xl overflow-hidden print:shadow-none print:w-full print:rounded-none print:text-black print:overflow-visible">
           
           {/* Header */}
-          <div className="px-12 py-10 border-b border-gray-100 bg-gray-50/30 print:bg-white print:px-8 print:py-6">
+          <div className="px-12 py-10 border-b border-gray-100 bg-gray-50/30 print:bg-white print:px-8 print:py-6 print:border-b print:border-gray-200">
             <div className="flex justify-between items-start">
               <div>
                  <h1 className="text-2xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-rose-600 to-orange-600 print:text-black mb-2">
@@ -195,7 +196,7 @@ export const Billing: React.FC = () => {
                       const final = taxable + tax;
 
                       return (
-                         <tr key={idx}>
+                         <tr key={idx} className="break-inside-avoid">
                             <td className="py-4 text-sm font-semibold text-gray-900 print:text-black">{item.name}</td>
                             <td className="py-4 text-sm text-right text-gray-600 font-medium print:text-black">{item.quantity}</td>
                             <td className="py-4 text-sm text-right text-gray-600 font-medium print:text-black">{symbol} {item.sellPrice.toLocaleString()}</td>
@@ -233,7 +234,7 @@ export const Billing: React.FC = () => {
           </div>
           
           {/* Bottom Footer */}
-          <div className="px-12 py-10 print:px-8 print:py-8">
+          <div className="px-12 py-10 print:px-8 print:py-8 break-inside-avoid">
              <div className="flex justify-between items-end">
                 <div className="max-w-md">
                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 print:text-black">Terms & Conditions</p>
@@ -254,7 +255,7 @@ export const Billing: React.FC = () => {
 
   // POS INTERFACE
   return (
-    <div className="flex flex-col lg:flex-row gap-6 lg:h-[calc(100vh-8rem)] h-auto print:hidden">
+    <div className="flex flex-col lg:flex-row gap-6 lg:h-[calc(100vh-12rem)] h-auto print:hidden">
       {/* Left: Input & Cart */}
       <div className="lg:w-2/3 flex flex-col gap-6 overflow-hidden">
         {/* Header Inputs */}

@@ -44,7 +44,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTa
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-950 overflow-hidden transition-colors duration-300 print:h-auto print:overflow-visible">
+    <div className="flex h-screen h-[100dvh] bg-gray-50 dark:bg-gray-950 overflow-hidden transition-colors duration-300 print:h-auto print:overflow-visible">
       {/* Sidebar - Glassmorphism & Gradient Branding */}
       <aside 
         className={`
@@ -107,7 +107,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTa
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col h-screen overflow-hidden relative print:h-auto print:overflow-visible">
+      <div className="flex-1 flex flex-col h-full overflow-hidden relative print:h-auto print:overflow-visible">
         {/* Header - Glassmorphism */}
         <header className="print:hidden h-20 absolute top-0 left-0 right-0 z-40 bg-white/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-gray-200/50 dark:border-gray-800/50 flex items-center justify-between px-6 lg:px-8 transition-colors duration-300">
           <div className="flex items-center">
@@ -138,8 +138,8 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTa
           </div>
         </header>
 
-        {/* Page Content - with top padding for fixed header */}
-        <main className="flex-1 overflow-auto bg-gray-50 dark:bg-gray-950 p-6 lg:p-8 pt-28 print:p-0 print:pt-0 print:bg-white print:overflow-visible transition-colors duration-300">
+        {/* Page Content - with top padding for fixed header and extra bottom padding for scrolling */}
+        <main className="flex-1 overflow-y-auto overflow-x-hidden bg-gray-50 dark:bg-gray-950 p-6 lg:p-8 pt-28 pb-32 print:p-0 print:pt-0 print:pb-0 print:bg-white print:overflow-visible transition-colors duration-300 scroll-smooth">
           <div className="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 print:animate-none">
             {children}
           </div>
